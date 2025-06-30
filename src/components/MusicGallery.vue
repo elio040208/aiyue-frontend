@@ -9,7 +9,7 @@
         :md="8"
         :lg="6"
       >
-        <el-card shadow="hover" class="music-card">
+        <el-card shadow="hover" class="music-card" @click="goToDetail(song.id)">
           <img
             v-if="song.cover_url"
             :src="song.cover_url"
@@ -19,12 +19,6 @@
           <div class="info">
             <h3>{{ song.title }}</h3>
             <p>{{ song.artist }} - {{ song.album }}</p>
-            <audio
-              v-if="song.audio_url"
-              controls
-              :src="song.audio_url"
-              class="audio-player"
-            ></audio>
           </div>
         </el-card>
       </el-col>
@@ -45,13 +39,20 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
+import { useRouter } from 'vue-router'
+import { BASE_URL } from '../config'
 
 const songs = ref([])
 const loading = ref(true)
+const router = useRouter()
+
+const goToDetail = (id) => {
+  router.push(`/song/${id}`)
+}
 
 onMounted(async () => {
   try {
-    const res = await axios.get('http://8.149.130.118:8000/music/songs')
+    const res = await axios.get(`${BASE_URL}/songs`)
     songs.value = res.data
   } catch (error) {
     console.error('加载歌曲失败:', error)
