@@ -2,6 +2,13 @@
   <div class="song-detail">
     <div class="left">
       <img v-if="song.cover_url" :src="song.cover_url" class="cover" />
+      <div v-if="vocalUrl || accompanimentUrl" class="separate-select-bar">
+        <el-radio-group v-model="selectedAudioType" size="small" @change="onAudioTypeChange">
+          <el-radio-button label="origin">原曲</el-radio-button>
+          <el-radio-button label="vocal" :disabled="!vocalUrl">人声</el-radio-button>
+          <el-radio-button label="acc" :disabled="!accompanimentUrl">伴奏</el-radio-button>
+        </el-radio-group>
+      </div>
       <audio
         v-if="audioUrl"
         controls
@@ -9,7 +16,19 @@
         class="audio-player"
         ref="audioRef"
         @timeupdate="onTimeUpdate"
+        @play="handlePlay('origin')"
       ></audio>
+      <el-button
+        type="success"
+        class="ai-separate-btn-short"
+        size="large"
+        :loading="separateLoading"
+        @click="handleSeparate"
+        style="margin: 18px 0 0 0; width: 100%;"
+      >
+        <i class="el-icon-headset" style="margin-right:6px;font-size:20px;"></i>
+        AI分离
+      </el-button>
     </div>
     <div class="right double-lyric">
       <!-- 歌曲基本信息，横跨两列 -->
@@ -90,7 +109,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, nextTick } from 'vue'
+import { ref, onMounted, nextTick, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import axios from 'axios'
 import { BASE_URL } from '../config'
@@ -98,16 +117,23 @@ import { BASE_URL } from '../config'
 const route = useRoute()
 const song = ref({})
 const audioUrl = ref('')
+const originAudioUrl = ref('')
+const vocalUrl = ref('')
+const accompanimentUrl = ref('')
+const selectedAudioType = ref('origin')
+const audioRef = ref(null)
+const separateLoading = ref(false)
+
+const showRewriteDialog = ref(false)
+const rewriteLoading = ref(false)
+const instruction = ref('')
+
 const originLyrics = ref([])
 const rewriteLyrics = ref([])
 const currentLine = ref(0)
 const currentRewriteLine = ref(0)
-const audioRef = ref(null)
 const originLyricContainer = ref(null)
 const rewriteLyricContainer = ref(null)
-const instruction = ref('')
-const showRewriteDialog = ref(false)
-const rewriteLoading = ref(false)
 
 onMounted(async () => {
   const id = route.params.id
@@ -115,21 +141,33 @@ onMounted(async () => {
   const res = await axios.get(`${BASE_URL}/songs/${id}`)
   song.value = res.data
 
-  // 获取音频地址
+  // 获取原曲音频
   try {
     const audioRes = await axios.get(`${BASE_URL}/audio_url/${song.value.source_id}`)
-    audioUrl.value = audioRes.data.audio_url
+    originAudioUrl.value = audioRes.data.audio_url
+    audioUrl.value = originAudioUrl.value
   } catch (e) {
+    originAudioUrl.value = ''
     audioUrl.value = ''
   }
 
-  // 获取原歌词（JSON），并将time转为秒
+  // 获取人声和伴奏音频地址
+  try {
+    const audioRes = await axios.get(`${BASE_URL}/separate_audio/${song.value.source_id}`)
+    vocalUrl.value = audioRes.data.vocal_path
+    accompanimentUrl.value = audioRes.data.accompaniment_path
+  } catch (e) {
+    vocalUrl.value = ''
+    accompanimentUrl.value = ''
+  }
+
+  // 获取原歌词
   try {
     const lyricRes = await axios.get(`${BASE_URL}/lyric/${song.value.source_id}`)
     originLyrics.value = (lyricRes.data.lyric || []).map(l => ({
       ...l,
       time: l.time ? toSeconds(l.time) : 0,
-      timeStr: l.time // 保留原始字符串
+      timeStr: l.time
     }))
   } catch (e) {
     originLyrics.value = []
@@ -216,6 +254,42 @@ async function handleRewrite() {
   await rewriteLyric()
   showRewriteDialog.value = false
 }
+
+// 切换音源
+function onAudioTypeChange(val) {
+  if (val === 'origin') audioUrl.value = originAudioUrl.value
+  if (val === 'vocal') audioUrl.value = vocalUrl.value
+  if (val === 'acc') audioUrl.value = accompanimentUrl.value
+  // 切换时暂停并重置进度
+  nextTick(() => {
+    if (audioRef.value) {
+      audioRef.value.pause()
+      audioRef.value.currentTime = 0
+    }
+  })
+}
+
+// 只允许一个音频播放
+function handlePlay(type) {
+  if (type !== 'origin' && audioRef.value) audioRef.value.pause()
+}
+
+// AI分离人声和伴奏
+async function handleSeparate() {
+  if (!song.value.source_id) return
+  separateLoading.value = true
+  vocalUrl.value = ''
+  accompanimentUrl.value = ''
+  try {
+    const res = await axios.post(`${BASE_URL}/separate_audio/${song.value.source_id}`)
+    vocalUrl.value = res.data.vocal_path
+    accompanimentUrl.value = res.data.accompaniment_path
+  } catch (e) {
+    vocalUrl.value = ''
+    accompanimentUrl.value = ''
+  }
+  separateLoading.value = false
+}
 </script>
 
 <style scoped>
@@ -238,6 +312,29 @@ async function handleRewrite() {
 .audio-player {
   width: 100%;
 }
+.ai-separate-btn-short {
+  font-size: 16px;
+  font-weight: bold;
+  padding: 10px 22px;
+  letter-spacing: 1px;
+  background: linear-gradient(90deg, #67c23a 0%, #409eff 100%);
+  color: #fff;
+  border: none;
+  box-shadow: 0 4px 16px rgba(64,158,255,0.12);
+  display: flex;
+  align-items: center;
+  transition: background 0.3s;
+}
+.ai-separate-btn-short:hover {
+  background: linear-gradient(90deg, #409eff 0%, #67c23a 100%);
+  color: #fff;
+}
+.separate-select-bar {
+  width: 100%;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: center;
+}
 .right.double-lyric {
   flex: 1;
   display: flex;
@@ -245,7 +342,7 @@ async function handleRewrite() {
   gap: 24px;
   position: relative;
 }
-.lyric-info-bar {
+.song-info-bar {
   display: flex;
   align-items: center;
   margin-bottom: 0;
