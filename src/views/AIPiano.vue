@@ -1,11 +1,11 @@
 <template>
   <div class="home-page">
-    <MusicGallery />
+    <UnderDevelopment />
   </div>
 </template>
 
 <script setup>
-import MusicGallery from '../components/MusicGallery.vue'
+import UnderDevelopment from '../components/UnderDevelopment.vue'
 </script>
 
 <style scoped>

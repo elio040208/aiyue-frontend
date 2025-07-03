@@ -1,11 +1,11 @@
 <template>
   <div class="home-page">
-    <MusicGallery />
+    <AIGenerate />
   </div>
 </template>
 
 <script setup>
-import MusicGallery from '../components/MusicGallery.vue'
+import AIGenerate from '../components/AIGenerate.vue'
 </script>
 
 <style scoped>
