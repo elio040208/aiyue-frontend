@@ -23,6 +23,12 @@
         <span class="nav-text">{{ item.title }}</span>
         <div class="nav-indicator" v-if="currentPath === item.path"></div>
       </div>
+
+      <div class="logout-section">
+  <el-button type="danger" @click="logout" size="small">退出登录</el-button>
+</div>
+
+
     </nav>
     
     <!-- 底部装饰 -->
@@ -41,28 +47,21 @@ import { useRouter, useRoute } from 'vue-router'
 
 const router = useRouter()
 const route = useRoute()
+const logout = () => {
+  localStorage.removeItem("token")  // 清除 token
+  router.push("/login")             // 跳回登录页
+}
+
 
 // 用户信息
-const userName = ref('音乐爱好者')
+const userName = ref(localStorage.getItem('username') || '音乐爱好者')
 const userAvatar = ref('https://p3-search.byteimg.com/obj/labis/7d51fd6eb72b5ef7a902a5d95010d734')
 
 // 菜单项
 const menuItems = ref([
-  {
-    title: '音乐馆',
-    path: '/',
-    icon: 'el-icon-headset'
-  },
-  {
-    title: 'AI音乐生成',
-    path: '/generate',
-    icon: 'el-icon-magic-stick'
-  },
-  {
-    title: 'AI钢琴演奏',
-    path: '/piano',
-    icon: 'el-icon-video-play'
-  }
+  { title: '音乐馆', path: '/app/home', icon: 'el-icon-headset' },
+  { title: 'AI音乐生成', path: '/app/generate', icon: 'el-icon-magic-stick' },
+  { title: 'AI钢琴演奏', path: '/app/piano', icon: 'el-icon-video-play' }
 ])
 
 // 当前路径
