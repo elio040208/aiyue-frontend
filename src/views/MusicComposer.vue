@@ -3,13 +3,13 @@
       <!-- 顶部标题区域 -->
       <div class="header-section">
         <div class="header-container">
-          <h1 class="page-title">神经网络鼓机</h1>
-          <p class="page-subtitle">AI驱动的实验性鼓机创作工具</p>
-          <div class="title-decoration">
-            <div class="music-note">🥁</div>
-            <div class="music-note">🎵</div>
-            <div class="music-note">🤖</div>
-          </div>
+                     <h1 class="page-title">古典音乐编曲创作</h1>
+           <p class="page-subtitle">AI驱动的古典乐器合奏创作工具</p>
+           <div class="title-decoration">
+             <div class="music-note">🎹</div>
+             <div class="music-note">🎻</div>
+             <div class="music-note">🎵</div>
+           </div>
         </div>
       </div>
   
@@ -20,10 +20,10 @@
           <div class="control-panel">
             <el-card class="control-card">
               <template #header>
-                <div class="card-header">
-                  <h3>鼓机控制</h3>
-                  <div class="header-icon">🎛️</div>
-                </div>
+                                 <div class="card-header">
+                   <h3>古典音乐控制</h3>
+                   <div class="header-icon">🎼</div>
+                 </div>
               </template>
               
               <!-- 节拍器设置 -->
@@ -32,14 +32,14 @@
                 <div class="metronome-controls">
                   <div class="tempo-control">
                     <label>速度 (BPM)</label>
-                    <el-slider
-                      v-model="tempo"
-                      :min="60"
-                      :max="200"
-                      :step="1"
-                      show-input
-                      class="tempo-slider"
-                    />
+                                         <el-slider
+                       v-model="tempo"
+                       :min="40"
+                       :max="160"
+                       :step="1"
+                       show-input
+                       class="tempo-slider"
+                     />
                   </div>
                   <div class="time-signature">
                     <label>拍号</label>
@@ -73,42 +73,46 @@
               <div class="control-section">
                 <h4 class="section-title">AI 神经网络</h4>
                 <div class="neural-controls">
-                  <div class="density-control">
-                    <label>密度控制</label>
-                    <el-slider
-                      v-model="density"
-                      :min="0"
-                      :max="1"
-                      :step="0.01"
-                      show-input
-                      class="density-slider"
-                    />
-                    <div class="density-info">
-                      <span>低密度</span>
-                      <span>高密度</span>
-                    </div>
-                  </div>
+                                     <div class="density-control">
+                     <label>音符密度</label>
+                     <el-slider
+                       v-model="density"
+                       :min="0"
+                       :max="1"
+                       :step="0.01"
+                       show-input
+                       class="density-slider"
+                     />
+                     <div class="density-info">
+                       <span>稀疏音符</span>
+                       <span>密集音符</span>
+                     </div>
+                   </div>
                   
-                  <div class="randomness-control">
-                    <label>随机性</label>
-                    <el-slider
-                      v-model="randomness"
-                      :min="0"
-                      :max="1"
-                      :step="0.01"
-                      show-input
-                      class="randomness-slider"
-                    />
-                  </div>
+                                     <div class="randomness-control">
+                     <label>旋律变化</label>
+                     <el-slider
+                       v-model="randomness"
+                       :min="0"
+                       :max="1"
+                       :step="0.01"
+                       show-input
+                       class="randomness-slider"
+                     />
+                     <div class="density-info">
+                       <span>稳定旋律</span>
+                       <span>变化旋律</span>
+                     </div>
+                   </div>
   
-                  <el-button
-                    type="success"
-                    @click="generatePattern"
-                    :loading="generating"
-                    class="generate-btn"
-                  >
-                    🎲 生成新节奏
-                  </el-button>
+                                     <el-button
+                     type="success"
+                     @click="generatePattern"
+                     :loading="generating"
+                     class="generate-btn"
+                   >
+                     🎼 生成新旋律
+                   </el-button>
                 </div>
               </div>
   
@@ -201,10 +205,10 @@
           <div class="drum-machine-section">
             <el-card class="drum-machine-card">
               <template #header>
-                <div class="card-header">
-                  <h3>鼓机网格</h3>
-                  <div class="header-icon">🥁</div>
-                </div>
+                                 <div class="card-header">
+                   <h3>古典乐器网格</h3>
+                   <div class="header-icon">🎹</div>
+                 </div>
               </template>
               
               <div class="drum-machine-container">
@@ -236,39 +240,40 @@
                 <!-- 播放控制 -->
                 <div class="playback-controls">
                   <div class="transport-controls">
-                    <el-button
-                      type="primary"
-                      size="large"
-                      @click="playPattern"
-                      :disabled="!hasPattern"
-                      class="transport-btn"
-                    >
-                      ▶️ 播放
-                    </el-button>
-                    <el-button
-                      type="warning"
-                      size="large"
-                      @click="pausePattern"
-                      :disabled="!isPlaying"
-                      class="transport-btn"
-                    >
-                      ⏸️ 暂停
-                    </el-button>
-                    <el-button
-                      type="info"
-                      size="large"
-                      @click="stopPattern"
-                      :disabled="!isPlaying"
-                      class="transport-btn"
-                    >
-                      ⏹️ 停止
-                    </el-button>
+                                         <el-button
+                       type="primary"
+                       size="large"
+                       @click="playPattern"
+                       :disabled="!hasPattern"
+                       class="transport-btn"
+                     >
+                       ▶️ 播放音乐
+                     </el-button>
+                                         <el-button
+                       type="warning"
+                       size="large"
+                       @click="pausePattern"
+                       :disabled="!isPlaying"
+                       class="transport-btn"
+                     >
+                       ⏸️ 暂停音乐
+                     </el-button>
+                     <el-button
+                       type="info"
+                       size="large"
+                       @click="stopPattern"
+                       :disabled="!isPlaying"
+                       class="transport-btn"
+                     >
+                       ⏹️ 停止音乐
+                     </el-button>
                   </div>
                   
-                  <div class="playback-info">
-                    <div class="current-beat">当前拍: {{ currentBeat }}</div>
-                    <div class="total-beats">总拍数: {{ totalBeats }}</div>
-                  </div>
+                                     <div class="playback-info">
+                     <div class="current-beat">当前拍: {{ currentBeat }}</div>
+                     <div class="total-beats">总拍数: {{ totalBeats }}</div>
+                     <div class="tempo-display">速度: {{ tempo }} BPM</div>
+                   </div>
                   
                   <div class="volume-control">
                     <label>音量</label>
@@ -293,8 +298,8 @@
   import { ref, onMounted, onUnmounted, computed } from 'vue'
   import { ElMessage } from 'element-plus'
   
-  // 响应式状态
-  const tempo = ref(120)
+     // 响应式状态
+   const tempo = ref(80) // 降低默认速度，让古典音乐更舒缓
   const timeSignature = ref({ beats: 4, division: 4 })
   const metronomeActive = ref(false)
   const isRecording = ref(false)
@@ -323,14 +328,14 @@
     distortion: 0
   })
   
-  // 鼓机轨道配置
+  // 古典乐器轨道配置 - 使用更慢的节奏
   const drumTracks = ref([
-    { id: 'kick', name: '底鼓', pattern: [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0] },
-    { id: 'snare', name: '军鼓', pattern: [0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0] },
-    { id: 'hihat', name: '踩镲', pattern: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1] },
-    { id: 'tom1', name: '通鼓1', pattern: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
-    { id: 'tom2', name: '通鼓2', pattern: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
-    { id: 'crash', name: '吊镲', pattern: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] }
+    { id: 'piano', name: '钢琴', pattern: [1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0], instrument: 'piano' },
+    { id: 'violin', name: '小提琴', pattern: [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0], instrument: 'violin' },
+    { id: 'flute', name: '长笛', pattern: [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0], instrument: 'flute' },
+    { id: 'cello', name: '大提琴', pattern: [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0], instrument: 'cello' },
+    { id: 'harp', name: '竖琴', pattern: [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0], instrument: 'harp' },
+    { id: 'clarinet', name: '单簧管', pattern: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], instrument: 'clarinet' }
   ])
   
   // 计算属性
@@ -412,7 +417,7 @@
       playMetronomeClick()
     }, interval)
     
-    ElMessage.success('节拍器已启动')
+         ElMessage.success('节拍器已启动，保持稳定的音乐节奏')
   }
   
   // 停止节拍器
@@ -446,17 +451,32 @@
     oscillator.stop(audioContext.currentTime + 0.1)
   }
   
-  // 生成新节奏
+  // 生成新节奏 - 优化为古典音乐风格
   function generatePattern() {
     generating.value = true
     
     setTimeout(() => {
       drumTracks.value.forEach(track => {
-        track.pattern = track.pattern.map(() => {
-          // 基于密度和随机性生成节奏
+        // 为不同乐器设置不同的密度
+        let instrumentDensity = density.value
+        if (track.instrument === 'harp') {
+          instrumentDensity = density.value * 0.8 // 竖琴音符稍少
+        } else if (track.instrument === 'cello') {
+          instrumentDensity = density.value * 0.7 // 大提琴音符更少
+        } else if (track.instrument === 'flute') {
+          instrumentDensity = density.value * 0.6 // 长笛音符最少
+        }
+        
+        track.pattern = track.pattern.map((beat, index) => {
           const random = Math.random()
-          const densityThreshold = density.value
+          const densityThreshold = instrumentDensity
           const randomnessFactor = randomness.value
+          
+          // 避免连续音符，让旋律更自然
+          if (index > 0 && track.pattern[index - 1] === 1) {
+            if (random < 0.3) return 1 // 30%概率保持连续
+            else return 0
+          }
           
           if (random < densityThreshold * (1 - randomnessFactor)) {
             return 1
@@ -469,7 +489,7 @@
       })
       
       generating.value = false
-      ElMessage.success('新节奏已生成！')
+      ElMessage.success('新的古典音乐节奏已生成！')
     }, 1000)
   }
   
@@ -481,14 +501,15 @@
     }
   }
   
-  // 播放节奏
+  // 播放节奏 - 优化为古典音乐节奏
   function playPattern() {
     if (!hasPattern.value) return
     
     isPlaying.value = true
     currentBeat.value = 0
     
-    const beatInterval = (60 / tempo.value) * 1000 / 4 // 16分音符的间隔
+    // 使用8分音符间隔，让古典音乐听起来更舒缓
+    const beatInterval = (60 / tempo.value) * 1000 / 2
     
     playbackInterval = setInterval(() => {
       currentBeat.value = (currentBeat.value % totalBeats.value) + 1
@@ -501,7 +522,7 @@
       })
     }, beatInterval)
     
-    ElMessage.success('开始播放节奏')
+    ElMessage.success('开始播放古典音乐')
   }
   
   // 暂停节奏
@@ -511,7 +532,7 @@
       clearInterval(playbackInterval)
       playbackInterval = null
     }
-    ElMessage.info('节奏已暂停')
+         ElMessage.info('音乐已暂停')
   }
   
   // 停止节奏
@@ -522,39 +543,106 @@
       clearInterval(playbackInterval)
       playbackInterval = null
     }
-    ElMessage.info('节奏已停止')
+         ElMessage.info('音乐已停止')
   }
   
-  // 播放鼓声
+  // 播放古典乐器声音 - 优化音色
   function playDrumSound(trackId) {
     if (!audioContext) return
     
     const oscillator = audioContext.createOscillator()
     const gainNode = audioContext.createGain()
+    const filter = audioContext.createBiquadFilter()
     
-    oscillator.connect(gainNode)
+    // 音频链: 振荡器 -> 滤波器 -> 增益 -> 输出
+    oscillator.connect(filter)
+    filter.connect(gainNode)
     gainNode.connect(audioContext.destination)
     
-    // 不同轨道的音色
-    const frequencies = {
-      kick: 60,
-      snare: 200,
-      hihat: 800,
-      tom1: 150,
-      tom2: 120,
-      crash: 1000
+    // 古典乐器配置 - 更柔和的音色
+    const instrumentConfig = {
+      piano: {
+        frequency: 220, // A3
+        type: 'triangle',
+        filterType: 'lowpass',
+        filterFreq: 800,
+        attack: 0.02,
+        decay: 0.1,
+        sustain: 0.7,
+        release: 0.3
+      },
+      violin: {
+        frequency: 440, // A4
+        type: 'sine',
+        filterType: 'lowpass',
+        filterFreq: 1200,
+        attack: 0.05,
+        decay: 0.2,
+        sustain: 0.8,
+        release: 0.4
+      },
+      flute: {
+        frequency: 880, // A5
+        type: 'sine',
+        filterType: 'lowpass',
+        filterFreq: 2000,
+        attack: 0.1,
+        decay: 0.3,
+        sustain: 0.9,
+        release: 0.5
+      },
+      cello: {
+        frequency: 110, // A2
+        type: 'triangle',
+        filterType: 'lowpass',
+        filterFreq: 600,
+        attack: 0.03,
+        decay: 0.15,
+        sustain: 0.75,
+        release: 0.35
+      },
+      harp: {
+        frequency: 330, // E4
+        type: 'triangle',
+        filterType: 'lowpass',
+        filterFreq: 1000,
+        attack: 0.01,
+        decay: 0.05,
+        sustain: 0.6,
+        release: 0.2
+      },
+      clarinet: {
+        frequency: 220, // A3
+        type: 'sine',
+        filterType: 'lowpass',
+        filterFreq: 900,
+        attack: 0.04,
+        decay: 0.18,
+        sustain: 0.8,
+        release: 0.4
+      }
     }
     
-    const frequency = frequencies[trackId] || 200
-    oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime)
-    oscillator.type = trackId === 'hihat' ? 'square' : 'sawtooth'
+    const config = instrumentConfig[trackId] || instrumentConfig.piano
     
-    gainNode.gain.setValueAtTime(0, audioContext.currentTime)
-    gainNode.gain.linearRampToValueAtTime(volume.value * 0.3, audioContext.currentTime + 0.01)
-    gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.1)
+    // 设置振荡器
+    oscillator.frequency.setValueAtTime(config.frequency, audioContext.currentTime)
+    oscillator.type = config.type
+    
+    // 设置滤波器 - 让声音更柔和
+    filter.type = config.filterType
+    filter.frequency.setValueAtTime(config.filterFreq, audioContext.currentTime)
+    filter.Q.setValueAtTime(1, audioContext.currentTime)
+    
+    // 设置增益包络 - ADSR包络让声音更自然
+    const now = audioContext.currentTime
+    gainNode.gain.setValueAtTime(0, now)
+    gainNode.gain.linearRampToValueAtTime(volume.value * 0.4, now + config.attack)
+    gainNode.gain.linearRampToValueAtTime(volume.value * 0.4 * config.sustain, now + config.attack + config.decay)
+    gainNode.gain.linearRampToValueAtTime(0, now + config.attack + config.decay + config.release)
     
     oscillator.start()
-    oscillator.stop(audioContext.currentTime + 0.1)
+    oscillator.stop(now + config.attack + config.decay + config.release)
   }
   
   // 切换录音
@@ -1525,12 +1613,13 @@
     border: 1px solid #e9ecef;
   }
   
-  .current-beat,
-  .total-beats {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #495057;
-  }
+     .current-beat,
+   .total-beats,
+   .tempo-display {
+     font-size: 1.1rem;
+     font-weight: 600;
+     color: #495057;
+   }
   
   .volume-control {
     display: flex;
