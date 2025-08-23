@@ -5,7 +5,7 @@
 </template>
 
 <script setup>
-import UnderDevelopment from '../components/UnderDevelopment.vue'
+import UnderDevelopment from '../components/AIPiano.vue'
 </script>
 
 <style scoped>
