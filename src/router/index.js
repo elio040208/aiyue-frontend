@@ -23,6 +23,7 @@ const routes = [
       { path: "generate", name: "AIGenerate", component: AIGenerate },
       { path: "piano", name: "AIPiano", component: AIPiano },
       { path: "composer", name: "MusicComposer", component: MusicComposer },
+      { path: "community", name: "MusicCommunity", component: MusicCommunity },
     ],
   },
 ];
@@ -42,7 +43,7 @@ router.beforeEach((to, from, next) => {
   } else {
     // 允许自由进入登录/注册
     next();
-  }
-});
+    // }
+  });
 
 export default router;

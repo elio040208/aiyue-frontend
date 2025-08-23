@@ -117,7 +117,8 @@ const menuItems = ref([
   { title: '音乐馆', path: '/app/home', icon: 'el-icon-headset' },
   { title: 'AI音乐生成', path: '/app/generate', icon: 'el-icon-magic-stick' },
   { title: 'AI钢琴演奏', path: '/app/piano', icon: 'el-icon-video-play' },
-  { title: '编曲创作', path: '/app/composer', icon: 'el-icon-edit' }
+  { title: '编曲创作', path: '/app/composer', icon: 'el-icon-edit' },
+  { title: '音乐交流区', path: '/app/community', icon: 'el-icon-chat-dot-round' }
 ])
 
 // 当前路径
