@@ -136,9 +136,8 @@ const filteredSongs = computed(() => {
 
 // 跳转到详情页
 const goToDetail = (id) => {
-  router.push({ name: "SongDetail", params: { id } })
+  router.push(`/song/${id}`)
 }
-
 
 // 搜索处理
 const handleSearch = () => {
