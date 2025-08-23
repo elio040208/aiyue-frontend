@@ -8,6 +8,7 @@ const Register = () => import("../components/Register.vue");
 const SongDetail = () => import("../views/SongDetail.vue");
 const AIGenerate = () => import("../views/AIGenerate.vue");
 const AIPiano = () => import("../views/AIPiano.vue");
+const MusicComposer = () => import("../views/MusicComposer.vue");
 
 const routes = [
   { path: "/", redirect: "/login" }, // 默认重定向到登录页
@@ -21,6 +22,7 @@ const routes = [
       { path: "song/:id", name: "SongDetail", component: SongDetail },
       { path: "generate", name: "AIGenerate", component: AIGenerate },
       { path: "piano", name: "AIPiano", component: AIPiano },
+      { path: "composer", name: "MusicComposer", component: MusicComposer },
     ],
   },
 ];

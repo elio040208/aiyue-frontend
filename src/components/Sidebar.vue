@@ -116,7 +116,8 @@ const userAvatar = ref('https://p3-search.byteimg.com/obj/labis/7d51fd6eb72b5ef7
 const menuItems = ref([
   { title: '音乐馆', path: '/app/home', icon: 'el-icon-headset' },
   { title: 'AI音乐生成', path: '/app/generate', icon: 'el-icon-magic-stick' },
-  { title: 'AI钢琴演奏', path: '/app/piano', icon: 'el-icon-video-play' }
+  { title: 'AI钢琴演奏', path: '/app/piano', icon: 'el-icon-video-play' },
+  { title: '编曲创作', path: '/app/composer', icon: 'el-icon-edit' }
 ])
 
 // 当前路径
