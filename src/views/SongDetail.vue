@@ -102,32 +102,56 @@
         <div class="lyric-panel">
           <div class="panel-header">
             <h3 class="panel-title">
-              <i class="el-icon-magic-stick"></i>
-              AI 重写歌词
+              <i class="el-icon-edit"></i>
+              重写歌词
             </h3>
+            <div class="panel-actions">
+              <el-button
+                size="small"
+                type="primary"
+                @click="saveDraft"
+                :loading="draftSaving"
+              >
+                保存草稿
+              </el-button>
+              <el-button
+                size="small"
+                type="info"
+                @click="loadHistoryDialog = true"
+              >
+                查看记录
+              </el-button>
+            </div>
           </div>
+
           <div class="lyric-content">
             <div
               class="lyric-scroll"
               ref="rewriteLyricContainer"
-              v-if="rewriteLyrics.length"
+              v-if="editableLyrics.length"
             >
               <div
-                v-for="(line, idx) in rewriteLyrics"
+                v-for="(line, idx) in editableLyrics"
                 :key="idx"
                 :id="'rewrite-lyric-line-' + idx"
                 :class="['lyric-line', { active: idx === currentRewriteLine }]"
               >
-                <span class="lyric-text">{{ line.text }}</span>
+                <!-- 这里直接用 input，而不是 span -->
+                <input
+                  v-model="editableLyrics[idx].text"
+                  class="lyric-input"
+                  placeholder="请输入歌词..."
+                />
                 <div class="lyric-indicator"></div>
               </div>
             </div>
             <div v-else class="empty-lyric">
-              <i class="el-icon-magic-stick"></i>
-              <p>暂无重写歌词</p>
+              <i class="el-icon-document-remove"></i>
+              <p>暂无歌词</p>
             </div>
           </div>
         </div>
+
       </div>
 
       <!-- 重写对话框 -->
@@ -200,6 +224,91 @@ const currentLine = ref(0);
 const currentRewriteLine = ref(0);
 const originLyricContainer = ref(null);
 const rewriteLyricContainer = ref(null);
+
+const editableLyrics = ref([]);
+const lyricHistory = ref([]);
+const loadHistoryDialog = ref(false);
+const draftSaving = ref(false);
+
+
+// 监听原歌词变化，初始化可编辑歌词
+watch(originLyrics, (newVal) => {
+  editableLyrics.value = JSON.parse(JSON.stringify(newVal));
+});
+
+// 获取草稿历史
+async function fetchLyricHistory() {
+  const res = await axios.get(`${BASE_URL}/songs/${song.value.source_id}/drafts`);
+  lyricHistory.value = res.data || [];
+}
+
+// 保存草稿
+async function saveDraft() {
+  if (!song.value.source_id) {
+    ElMessage.error("未找到歌曲ID");
+    return;
+  }
+  draftSaving.value = true;
+  try {
+    const payload = {
+      lyrics: editableLyrics.value.map(line => ({
+        text: line.text || "",
+        time: line.timeStr || "00:00.00",  // 或者用 format
+      }))
+    };
+
+
+    await axios.post(`${BASE_URL}/songs/${song.value.source_id}/drafts`, payload);
+    ElMessage.success("草稿已保存！");
+    await fetchLyricHistory();
+  } catch (err) {
+    ElMessage.error("保存失败，请稍后重试");
+  }
+  draftSaving.value = false;
+}
+
+// 加载某个草稿
+async function loadDraft(draftId) {
+  const res = await axios.get(`${BASE_URL}/drafts/${draftId}`);
+  editableLyrics.value = JSON.parse(JSON.stringify(res.data.lyrics));
+  loadHistoryDialog.value = false;
+  ElMessage.success("歌词已恢复到选定版本");
+}
+
+// 启用编辑模式
+function enableEditing(idx) {
+  editingLine.value = idx;
+}
+
+// 关闭编辑模式
+function disableEditing() {
+  editingLine.value = null;
+}
+
+// 页面初始化
+onMounted(async () => {
+  const id = route.params.id;
+  // 获取歌曲信息
+  const res = await axios.get(`${BASE_URL}/songs/${id}`);
+  song.value = res.data;
+
+  // 获取原歌词
+  try {
+    const lyricRes = await axios.get(
+      `${BASE_URL}/lyric/${song.value.source_id}`
+    );
+    originLyrics.value = (lyricRes.data.lyric || []).map((l) => ({
+      ...l,
+      time: l.time ? toSeconds(l.time) : 0,
+      timeStr: l.time,
+    }));
+  } catch (e) {
+    originLyrics.value = [];
+  }
+
+  // 获取歌词历史
+  await fetchLyricHistory();
+});
 
 const audioOptions = computed(() => [
   {
@@ -895,4 +1004,69 @@ async function handleSeparate() {
     text-align: center;
   }
 }
+/* 保持和原始歌词一样的布局 */
+.lyric-line {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  margin: 4px 0;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  border-left: 3px solid transparent;
+  background: transparent;
+}
+
+/* 悬停和选中高亮 */
+.lyric-line:hover {
+  background: rgba(102, 126, 234, 0.05);
+  border-left-color: rgba(102, 126, 234, 0.3);
+}
+
+.lyric-line.active {
+  background: linear-gradient(
+    135deg,
+    rgba(102, 126, 234, 0.1),
+    rgba(118, 75, 162, 0.1)
+  );
+  border-left-color: #667eea;
+  color: #667eea;
+  font-weight: 600;
+  transform: translateX(8px);
+  box-shadow: 0 4px 20px rgba(102, 126, 234, 0.2);
+}
+
+/* 输入框样式和原歌词一致 */
+.lyric-input {
+  flex: 1;
+  font-size: 1rem;
+  line-height: 1.6;
+  background: transparent;
+  border: none;
+  color: #374151;
+  outline: none;
+}
+
+/* 高亮状态下的字体 */
+.lyric-line.active .lyric-input {
+  color: #667eea;
+  font-weight: bold;
+}
+
+/* 指示器保持 */
+.lyric-indicator {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: transparent;
+  transition: all 0.3s ease;
+  margin-left: 12px;
+}
+
+.lyric-line.active .lyric-indicator {
+  background: #667eea;
+  box-shadow: 0 0 12px rgba(102, 126, 234, 0.6);
+  animation: pulse 2s infinite;
+}
+
 </style>
